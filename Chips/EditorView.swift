@@ -13,21 +13,14 @@ struct EditorView: View {
     
     @FocusState private var toEmailsFocus: Bool
     
-    @State private var text = ""
-    
     var body: some View {
         VStack {
-            HStack {
+            HStack (alignment: .top) {
                 Text("To")
-                GeometryReader { geo in
-                    EmailInputArea3(geometryWidth: geo.size.width, emails: $toEmails)
-                }
-                .padding(.vertical)
+                EmailInputArea3(emails: $toEmails)
             }
-            
-            
-            //            TextEditor(text: $text)
-            //                .background(.blue)
+            .padding(.vertical)
+            .background(.yellow)
         }
     }
 }
@@ -35,3 +28,7 @@ struct EditorView: View {
 #Preview {
     EditorView()
 }
+
+/** Note
+  1. We cannot use overlay/background to render chips becuase content is overflowing when chips expands beyound 1 line.
+ */

@@ -17,17 +17,29 @@ struct EmailInputArea3: View {
     
     @FocusState private var isTextFieldFocused: Bool
     
-    private let geometryWidth: CGFloat
+    @State private var geometryWidth: CGFloat = .zero
     
-    init(geometryWidth: CGFloat, emails: Binding<[String]>) {
+    init(emails: Binding<[String]>) {
         _emails = emails
-        self.geometryWidth = geometryWidth
     }
     
     var body: some View {
+        childView
+            .readSize { size in
+                geometryWidth = size.width
+                print("NOKI Above", geometryWidth)
+            }
+        //.fixedSize(horizontal: false, vertical: true)
+        
+    }
+}
+
+extension EmailInputArea3 {
+    
+    private var childView: some View {
         var width = CGFloat.zero
         var height = CGFloat.zero
-        ZStack (alignment: .topLeading) {
+        return ZStack (alignment: .topLeading) {
             ForEach(0...emails.count, id: \.self) { index in
                 if index == emails.count {
                     TextField("Enter your email", text: $text)
@@ -36,7 +48,6 @@ struct EmailInputArea3: View {
                         .padding(.leading, 5)
                         .textInputAutocapitalization(.never)
                         .fixedSize()
-                        //.frame(maxWidth: geometryWidth - width)
                         .alignmentGuide(.leading) { dimension in
                             if (width + dimension.width > geometryWidth) {
                                 width = 0
@@ -66,7 +77,7 @@ struct EmailInputArea3: View {
                     }
                     .padding(5)
                     .alignmentGuide(.leading) { dimension in
-                        if (width + dimension.width > geometryWidth) {
+                        if (width + dimension.width >  geometryWidth) {
                             width = 0
                             height += dimension.height
                         }
@@ -81,16 +92,14 @@ struct EmailInputArea3: View {
                 }
             }
         }
+        .background(.orange)
         .frame(maxWidth: .infinity, alignment: .leading)
         .focused($isTextFieldFocused)
-        .background(.gray)
-        //.fixedSize(horizontal: false, vertical: true)
-        
     }
 }
 
 extension EmailInputArea3 {
-
+    
     private func appendEnteredEmail() {
         emails.append(text)
     }
@@ -101,8 +110,5 @@ extension EmailInputArea3 {
 }
 
 #Preview {
-    GeometryReader { geo in
-        EmailInputArea3(geometryWidth: geo.size.width, emails: .constant([]))
-            .background(.blue.opacity(0.2))
-    }
+    EmailInputArea3(emails: .constant(["arun1235@example.com", ""]))
 }
