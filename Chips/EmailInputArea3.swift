@@ -9,8 +9,6 @@ import SwiftUI
 
 struct EmailInputArea3: View {
     
-    private static let textField = "textField"
-    
     @Binding private var emails: [String]
     
     @State private var text = ""
@@ -25,12 +23,12 @@ struct EmailInputArea3: View {
     
     var body: some View {
         childView
+            .onTapGesture {
+                isTextFieldFocused = true
+            }
             .readSize { size in
                 geometryWidth = size.width
-                print("NOKI Above", geometryWidth)
             }
-        //.fixedSize(horizontal: false, vertical: true)
-        
     }
 }
 
@@ -48,6 +46,7 @@ extension EmailInputArea3 {
                         .padding(.leading, 5)
                         .textInputAutocapitalization(.never)
                         .fixedSize()
+                        .focused($isTextFieldFocused)
                         .alignmentGuide(.leading) { dimension in
                             if (width + dimension.width > geometryWidth) {
                                 width = 0
@@ -62,17 +61,13 @@ extension EmailInputArea3 {
                             height = 0
                             return -result
                         }
-                        .focused($isTextFieldFocused)
                         .onSubmit {
                             appendEnteredEmail()
                             text = ""
                         }
-                        .onAppear {
-                            isTextFieldFocused = true
-                        }
                 }
                 else {
-                    EmailChipCard(email: emails[index]) { item in
+                    EmailChipCard(email: emails[index]) { _ in
                         removeEmail(email: emails[index])
                     }
                     .padding(5)
@@ -92,9 +87,8 @@ extension EmailInputArea3 {
                 }
             }
         }
-        .background(.orange)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .focused($isTextFieldFocused)
+        .background(.orange)
     }
 }
 
