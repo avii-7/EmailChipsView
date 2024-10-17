@@ -23,11 +23,12 @@ struct EmailInputArea3: View {
     
     var body: some View {
         childView
-            .onTapGesture {
-                isTextFieldFocused = true
-            }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .readSize { size in
                 geometryWidth = size.width
+            }
+            .onTapGesture {
+                isTextFieldFocused = true
             }
     }
 }
@@ -37,58 +38,60 @@ extension EmailInputArea3 {
     private var childView: some View {
         var width = CGFloat.zero
         var height = CGFloat.zero
+        
         return ZStack (alignment: .topLeading) {
-            ForEach(0...emails.count, id: \.self) { index in
-                if index == emails.count {
-                    TextField("Enter your email", text: $text)
-                        .background(.green)
-                        .padding(.top, 10)
-                        .padding(.leading, 5)
-                        .textInputAutocapitalization(.never)
-                        .fixedSize()
-                        .focused($isTextFieldFocused)
-                        .alignmentGuide(.leading) { dimension in
-                            if (width + dimension.width > geometryWidth) {
-                                width = 0
-                                height += dimension.height
-                            }
-                            let result = width
-                            width = 0
-                            return -result
-                        }
-                        .alignmentGuide(.top) { dimension in
-                            let result = height
-                            height = 0
-                            return -result
-                        }
-                        .onSubmit {
-                            appendEnteredEmail()
-                            text = ""
-                        }
+            ForEach(emails.indices, id: \.self) { index in
+                
+                EmailChipCard(email: emails[index]) { _ in
+                    removeEmail(email: emails[index])
                 }
-                else {
-                    EmailChipCard(email: emails[index]) { _ in
-                        removeEmail(email: emails[index])
+                .padding(5)
+                .alignmentGuide(.leading) { dimension in
+                    if (width + dimension.width >  geometryWidth) {
+                        width = 0
+                        height += dimension.height
                     }
-                    .padding(5)
-                    .alignmentGuide(.leading) { dimension in
-                        if (width + dimension.width >  geometryWidth) {
-                            width = 0
-                            height += dimension.height
-                        }
-                        let result = width
-                        width += dimension.width
-                        return -result
-                    }
-                    .alignmentGuide(.top) { dimension in
-                        let result = height
-                        return -result
-                    }
+                    let result = width
+                    width += dimension.width
+                    return -result
+                }
+                .alignmentGuide(.top) { dimension in
+                    let result = height
+                    return -result
+                    
                 }
             }
+            
+            TextField("Enter your email", text: $text)
+                .background(.green)
+                .padding(.top, 10)
+                .padding(.leading, 5)
+                .textInputAutocapitalization(.never)
+                .fixedSize()
+                .focused($isTextFieldFocused)
+                .alignmentGuide(.leading) { dimension in
+                    if (width + dimension.width > geometryWidth) {
+                        width = 0
+                        height += dimension.height
+                    }
+                    let result = width
+                    width = 0
+                    return -result
+                }
+                .alignmentGuide(.top) { dimension in
+                    let result = height
+                    height = 0
+                    return -result
+                }
+                .onSubmit {
+                    appendEnteredEmail()
+                    text = ""
+                    isTextFieldFocused = true
+                }
+                .onAppear {
+                    print("hey")
+                }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(.orange)
     }
 }
 
@@ -104,5 +107,5 @@ extension EmailInputArea3 {
 }
 
 #Preview {
-    EmailInputArea3(emails: .constant(["arun1235@example.com", ""]))
+    EmailInputArea3(emails: .constant(["arun1235@example.com", "gamble.com", "viewFinder@gmail.com", "youareusingit@example.com"]))
 }
