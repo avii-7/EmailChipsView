@@ -9,88 +9,94 @@ import SwiftUI
 
 struct EmailInputArea3: View {
     
-    private static let textField = "textField"
-    
     @Binding private var emails: [String]
     
     @State private var text = ""
     
     @FocusState private var isTextFieldFocused: Bool
     
-    private let geometryWidth: CGFloat
+    @State private var geometryWidth: CGFloat = .zero
     
-    init(geometryWidth: CGFloat, emails: Binding<[String]>) {
+    init(emails: Binding<[String]>) {
         _emails = emails
-        self.geometryWidth = geometryWidth
     }
     
     var body: some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-        ZStack (alignment: .topLeading) {
-            ForEach(0...emails.count, id: \.self) { index in
-                if index == emails.count {
-                    TextField("Enter your email", text: $text)
-                        .background(.green)
-                        .padding(.top, 10)
-                        .padding(.leading, 5)
-                        .textInputAutocapitalization(.never)
-                        .fixedSize()
-                        //.frame(maxWidth: geometryWidth - width)
-                        .alignmentGuide(.leading) { dimension in
-                            if (width + dimension.width > geometryWidth) {
-                                width = 0
-                                height += dimension.height
-                            }
-                            let result = width
-                            width = 0
-                            return -result
-                        }
-                        .alignmentGuide(.top) { dimension in
-                            let result = height
-                            height = 0
-                            return -result
-                        }
-                        .focused($isTextFieldFocused)
-                        .onSubmit {
-                            appendEnteredEmail()
-                            text = ""
-                        }
-                        .onAppear {
-                            isTextFieldFocused = true
-                        }
-                }
-                else {
-                    EmailChipCard(email: emails[index]) { item in
-                        removeEmail(email: emails[index])
-                    }
-                    .padding(5)
-                    .alignmentGuide(.leading) { dimension in
-                        if (width + dimension.width > geometryWidth) {
-                            width = 0
-                            height += dimension.height
-                        }
-                        let result = width
-                        width += dimension.width
-                        return -result
-                    }
-                    .alignmentGuide(.top) { dimension in
-                        let result = height
-                        return -result
-                    }
-                }
+        childView
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .readSize { size in
+                geometryWidth = size.width
             }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .focused($isTextFieldFocused)
-        .background(.gray)
-        //.fixedSize(horizontal: false, vertical: true)
-        
+            .onTapGesture {
+                isTextFieldFocused = true
+            }
     }
 }
 
 extension EmailInputArea3 {
+    
+    private var childView: some View {
+        var width = CGFloat.zero
+        var height = CGFloat.zero
+        
+        return ZStack (alignment: .topLeading) {
+            ForEach(emails.indices, id: \.self) { index in
+                
+                EmailChipCard(email: emails[index]) { _ in
+                    removeEmail(email: emails[index])
+                }
+                .padding(5)
+                .alignmentGuide(.leading) { dimension in
+                    if (width + dimension.width >  geometryWidth) {
+                        width = 0
+                        height += dimension.height
+                    }
+                    let result = width
+                    width += dimension.width
+                    return -result
+                }
+                .alignmentGuide(.top) { dimension in
+                    let result = height
+                    return -result
+                    
+                }
+            }
+            
+            TextField("Enter your email", text: $text)
+                .background(.green)
+                .padding(.top, 10)
+                .padding(.leading, 5)
+                .textInputAutocapitalization(.never)
+                .fixedSize()
+                .focused($isTextFieldFocused)
+                .alignmentGuide(.leading) { dimension in
+                    if (width + dimension.width > geometryWidth) {
+                        width = 0
+                        height += dimension.height
+                    }
+                    let result = width
+                    width = 0
+                    return -result
+                }
+                .alignmentGuide(.top) { dimension in
+                    let result = height
+                    height = 0
+                    return -result
+                }
+                .onSubmit {
+                    appendEnteredEmail()
+                    text = ""
+                    isTextFieldFocused = true
+                }
+                .onAppear {
+                    print("hey")
+                }
+        }
+    }
+}
 
+extension EmailInputArea3 {
+    
     private func appendEnteredEmail() {
         emails.append(text)
     }
@@ -101,8 +107,5 @@ extension EmailInputArea3 {
 }
 
 #Preview {
-    GeometryReader { geo in
-        EmailInputArea3(geometryWidth: geo.size.width, emails: .constant([]))
-            .background(.blue.opacity(0.2))
-    }
+    EmailInputArea3(emails: .constant(["arun1235@example.com", "gamble.com", "viewFinder@gmail.com", "youareusingit@example.com"]))
 }
