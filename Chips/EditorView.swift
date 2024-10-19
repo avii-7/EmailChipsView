@@ -9,39 +9,35 @@ import SwiftUI
 
 struct EditorView: View {
     
-    @State private var toEmails: [String] = ["bob@example.com", "jane@example.com", "growmore@example.com"]
+    @State private var toEmails = [String]()
     
-    @State private var fromEmails: [String] = []
+//    @State private var toEmails = ["arun.k@gmail.com", "jass.jj@gmail.com", "nice@gmail.com"]
+    
+    @State private var text: String = "Once there was a crow"
     
     @FocusState private var toEmailsFocus: Bool
     
     var body: some View {
-            ScrollView {
-                VStack (spacing: 10) {
-                    
-                    HStack (alignment: .top) {
-                        Text("To")
-                        EmailInputArea3(emails: $toEmails)
-                    }
-//                    HStack (alignment: .center) {
-//                        Text("From")
-//                        EmailInputArea3(emails: $fromEmails)
-//                    }
-//                    TextEditor(text: .constant(""))
-//                        .background(.blue)
-                }
-//                .padding(.top, 100)
+        ScrollView {
+            HStack (alignment: .center) {
+                Text("To")
+                EmailInputArea(emails: $toEmails)
             }
-            
+            TextEditor(text: $text)
+                .frame(maxWidth: .infinity, minHeight: 40)
+                .background(.green)
+        }
         .navigationTitle("Compose")
         .padding()
     }
 }
 
 #Preview {
-    EditorView()
+    NavigationStack {
+        EditorView()
+    }
 }
 
 /** Note
-  1. We cannot use overlay/background to render chips becuase content is overflowing when chips expands beyound 1 line.
+ 1. We cannot use overlay/background to render chips becuase content is overflowing when chips expands beyound 1 line.
  */
