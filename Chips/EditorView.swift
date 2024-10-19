@@ -22,10 +22,14 @@ struct EditorView: View {
             HStack (alignment: .top) {
                 Text("To")
                     .padding(.top, 5)
+                    .foregroundStyle(.gray)
                 EmailInputArea(emails: $toEmails)
             }
+            
+            Divider()
+            
             TextEditor(text: $text)
-                .frame(maxWidth: .infinity, minHeight: 40)
+                .frame(maxWidth: .infinity, minHeight: 100)
                 .background(.green)
         }
         .navigationTitle("Compose")
