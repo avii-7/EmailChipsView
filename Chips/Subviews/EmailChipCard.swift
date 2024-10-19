@@ -16,27 +16,27 @@ struct EmailChipCard: View {
     var body: some View {
         HStack {
             Text(email)
-                .foregroundColor(.black)
                 .lineLimit(1)
+                .fontWeight(.semibold)
             Button {
                 onDelete(email)
             } label: {
                 Image(systemName: "xmark.circle")
-                    .foregroundColor(.black)
             }
         }
+        .foregroundColor(.blue)
         .padding(.horizontal, 15)
         .padding(.vertical, 6)
         .background(
             Capsule()
-                .stroke(.white, style: StrokeStyle(lineWidth: 1))
-                .background(Capsule().fill(.blue))
+                .stroke(.blue, style: StrokeStyle(lineWidth: 1.5))
+                .background(Capsule().fill(.blue.opacity(0.05)))
         )
     }
 }
 
 #Preview {
-    EmailChipCard(email: "arunmehra1999@gmail.com") { item in
+    EmailChipCard(email: "kumar.arun.ynr@gmail.com") { item in
         print("remove chip card")
     }
 }

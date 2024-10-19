@@ -19,8 +19,9 @@ struct EditorView: View {
     
     var body: some View {
         ScrollView {
-            HStack (alignment: .center) {
+            HStack (alignment: .top) {
                 Text("To")
+                    .padding(.top, 5)
                 EmailInputArea(emails: $toEmails)
             }
             TextEditor(text: $text)
@@ -37,7 +38,3 @@ struct EditorView: View {
         EditorView()
     }
 }
-
-/** Note
- 1. We cannot use overlay/background to render chips becuase content is overflowing when chips expands beyound 1 line.
- */

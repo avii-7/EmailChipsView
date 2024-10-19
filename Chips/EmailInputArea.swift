@@ -2,10 +2,14 @@
 //  EmailInputArea.swift
 //  Chips
 //
-//  Created by Arun on 07/10/24.
+//  Created by YourName on 07/10/24.
 //
 
 import SwiftUI
+
+/** Important Notes
+ * Make sure while adjusting padding you adjust in both views (ChipCard and TextField)
+ */
 
 struct EmailInputArea: View {
     
@@ -23,10 +27,13 @@ struct EmailInputArea: View {
     
     var body: some View {
         childView
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top, 1)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
             .readSize { size in
                 geometryWidth = size.width
             }
+           // Empty background so that tap gesture keep on working.
+            .background()
             .onTapGesture {
                 isTextFieldFocused = true
             }
@@ -63,15 +70,9 @@ extension EmailInputArea {
                 }
             }
             
-            TextField("Enter your email", text: $text)
-                .padding(.top, 5)
+            EmailTextField(text: $text, isTextFieldFocused: _isTextFieldFocused)
                 .padding(.horizontal, 5)
-                .textInputAutocapitalization(.never)
                 .fixedSize()
-                .focused($isTextFieldFocused)
-                .textContentType(.emailAddress)
-                .keyboardType(.emailAddress)
-                .autocorrectionDisabled()
                 .alignmentGuide(.leading) { dimension in
                     if (width + dimension.width > geometryWidth) {
                         width = 0
@@ -103,24 +104,14 @@ extension EmailInputArea {
     
     private func removeEmail(email: String) {
         withAnimation {
-            emails.removeAll { $0 == email }
+            if let index = emails.firstIndex(of: email) {
+                emails.remove(at: index)
+            }
         }
     }
 }
 
 #Preview {
-    EmailInputArea(
-        emails: .constant(
-            [
-                "arun1235@example.com",
-                "gamble.com",
-                "viewFinder@gmail.com",
-                "youareusingit@example.com",
-                "arun1235@example.com",
-                "grow@gmail.com",
-                "gmail.com"
-            ]
-        )
-    )
-        .background(.red)
+    EmailInputArea(emails: .constant(["bob@example.com","alice@example.com"]))
+        .padding(.horizontal)
 }
