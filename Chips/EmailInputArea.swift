@@ -32,7 +32,7 @@ struct EmailInputArea: View {
             .readSize { size in
                 geometryWidth = size.width
             }
-           // Empty background so that tap gesture keep on working.
+        // Empty background so that tap gesture keep on working.
             .background()
             .onTapGesture {
                 isTextFieldFocused = true
@@ -70,28 +70,36 @@ extension EmailInputArea {
                 }
             }
             
-            EmailTextField(text: $text, isTextFieldFocused: _isTextFieldFocused)
-                .padding(.horizontal, 5)
-                .fixedSize()
-                .alignmentGuide(.leading) { dimension in
-                    if (width + dimension.width > geometryWidth) {
-                        width = 0
-                        height += dimension.height
-                    }
-                    let result = width
+            EnhancedTextField(placeholder: "", text: $text, onBackspace: {
+                removeLastChipCard()
+                print("Nice")
+            }, onSubmit: {
+                appendEnteredEmail()
+                text = ""
+                isTextFieldFocused = true
+            })
+            .focused($isTextFieldFocused)
+            .padding(.trailing, 15)
+            .padding(.vertical, 6)
+            .background(
+                Capsule().fill(Color.clear)
+            )
+            .padding(.horizontal, 5)
+            .fixedSize()
+            .alignmentGuide(.leading) { dimension in
+                if (width + dimension.width > geometryWidth) {
                     width = 0
-                    return -result
+                    height += dimension.height
                 }
-                .alignmentGuide(.top) { dimension in
-                    let result = height
-                    height = 0
-                    return -result
-                }
-                .onSubmit {
-                    appendEnteredEmail()
-                    text = ""
-                    isTextFieldFocused = true
-                }
+                let result = width
+                width = 0
+                return -result
+            }
+            .alignmentGuide(.top) { dimension in
+                let result = height
+                height = 0
+                return -result
+            }
         }
     }
 }
@@ -107,6 +115,17 @@ extension EmailInputArea {
             if let index = emails.firstIndex(of: email) {
                 emails.remove(at: index)
             }
+        }
+    }
+    
+    private func removeLastChipCard() {
+        if
+            text.isEmpty,
+            emails.isEmpty == false {
+            emails.removeLast()
+        }
+        else {
+            print(text, emails.isEmpty)
         }
     }
 }

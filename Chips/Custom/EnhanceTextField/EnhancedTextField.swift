@@ -13,9 +13,14 @@ struct EnhancedTextField : UIViewRepresentable {
     let placeholder: String
     @Binding var text: String
     var onBackspace: (() -> Void)? = nil
+    var onSubmit: (() -> Void)? = nil
     
     func makeUIView(context: Context) -> CustomUITextField {
         let view = CustomUITextField()
+        view.keyboardType = .emailAddress
+        view.textContentType = .emailAddress
+        view.autocorrectionType = .no
+        view.autocapitalizationType = .none
         view.placeholder = placeholder
         view.onBackspacePress = onBackspace
         view.delegate = context.coordinator
@@ -27,26 +32,34 @@ struct EnhancedTextField : UIViewRepresentable {
     }
     
     func makeCoordinator() -> EnhancedTextFieldCoordinator {
-        EnhancedTextFieldCoordinator(text: $text)
+        EnhancedTextFieldCoordinator(text: $text, onSubmit: onSubmit)
     }
     
     class EnhancedTextFieldCoordinator: NSObject, UITextFieldDelegate {
         
         private let text: Binding<String>
         
-        init(text: Binding<String>) {
+        private let onSubmit: (() -> Void)?
+        
+        init(text: Binding<String>, onSubmit: (() -> Void)? = nil) {
             self.text = text
+            self.onSubmit = onSubmit
         }
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             text.wrappedValue = textField.text ?? ""
             return true
         }
+        
+        func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+            onSubmit?()
+            return true
+        }
     }
 }
 
 #Preview {
-    EnhancedTextField(placeholder: "Enter your email", text: .constant("")) {
+    EnhancedTextField(placeholder: "Enter your email", text: .constant(""), onSubmit:  {
         print("Backspace pressed")
-    }
+    })
 }
