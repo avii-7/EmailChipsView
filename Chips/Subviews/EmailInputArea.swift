@@ -8,7 +8,8 @@
 import SwiftUI
 
 /** Important Notes
- * Make sure while adjusting padding you adjust in both views (ChipCard and TextField)
+ * Make sure while adjusting padding, font size etc you adjust in both views (ChipCard and TextField)
+ *
  */
 
 struct EmailInputArea: View {
@@ -77,7 +78,7 @@ extension EmailInputArea {
                 isTextFieldFocused = true
             })
             .focused($isTextFieldFocused)
-            .padding(.trailing, 15)
+            .padding(.trailing, 10)
             .padding(.vertical, 6)
             .background(
                 Capsule().fill(Color.clear)

@@ -19,7 +19,8 @@ struct EditorView: View {
         ScrollView {
             HStack (alignment: .top) {
                 Text("To")
-                    .padding(.top, 5)
+                    .font(.subheadline.weight(.medium))
+                    .padding(.top, 7)
                     .foregroundStyle(.gray)
                 EmailInputArea(emails: $toEmails)
             }

@@ -17,6 +17,8 @@ struct EnhancedTextField : UIViewRepresentable {
     
     func makeUIView(context: Context) -> CustomUITextField {
         let view = CustomUITextField()
+        let font = UIFont.preferredFont(forTextStyle: .subheadline)
+        view.font = UIFont.systemFont(ofSize: font.pointSize, weight: .medium)
         view.keyboardType = .emailAddress
         view.textContentType = .emailAddress
         view.autocorrectionType = .no

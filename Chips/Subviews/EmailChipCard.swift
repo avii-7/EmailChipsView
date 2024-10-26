@@ -14,10 +14,10 @@ struct EmailChipCard: View {
     let onDelete: (String) -> Void
     
     var body: some View {
-        HStack {
+        HStack (spacing: 4) {
             Text(email)
                 .lineLimit(1)
-                .fontWeight(.semibold)
+                .font(.subheadline.weight(.medium))
             Button {
                 onDelete(email)
             } label: {
@@ -25,11 +25,11 @@ struct EmailChipCard: View {
             }
         }
         .foregroundColor(.blue)
-        .padding(.horizontal, 15)
+        .padding(.horizontal, 10)
         .padding(.vertical, 6)
         .background(
             Capsule()
-                .stroke(.blue, style: StrokeStyle(lineWidth: 1.5))
+                .stroke(.blue, style: StrokeStyle(lineWidth: 1))
                 .background(Capsule().fill(.blue.opacity(0.05)))
         )
     }
