@@ -11,8 +11,6 @@ struct EditorView: View {
     
     @State private var toEmails = [String]()
     
-//    @State private var toEmails = ["arun.k@gmail.com", "jass.jj@gmail.com", "nice@gmail.com"]
-    
     @State private var text: String = "Once there was a crow"
     
     @FocusState private var toEmailsFocus: Bool
@@ -22,13 +20,17 @@ struct EditorView: View {
             HStack (alignment: .top) {
                 Text("To")
                     .padding(.top, 5)
+                    .foregroundStyle(.gray)
                 EmailInputArea(emails: $toEmails)
             }
+            
+            Divider()
+            
             TextEditor(text: $text)
-                .frame(maxWidth: .infinity, minHeight: 40)
+                .frame(maxWidth: .infinity, minHeight: 100)
                 .background(.green)
         }
-        .navigationTitle("Compose")
+        .navigationTitle("Chip View")
         .padding()
     }
 }

@@ -11,7 +11,9 @@ import SwiftUI
 struct ChipsApp: App {
     var body: some Scene {
         WindowGroup {
-            EditorView()
+            NavigationStack {
+                EditorView()
+            }
         }
     }
 }
