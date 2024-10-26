@@ -25,7 +25,7 @@ struct EnhancedTextField : UIViewRepresentable {
         view.onBackspacePress = onBackspace
         view.delegate = context.coordinator
         return view
-      }
+    }
     
     func updateUIView(_ uiView: CustomUITextField, context: Context) {
         uiView.text = text
@@ -37,17 +37,20 @@ struct EnhancedTextField : UIViewRepresentable {
     
     class EnhancedTextFieldCoordinator: NSObject, UITextFieldDelegate {
         
-        private let text: Binding<String>
+        @Binding private var text: String
         
         private let onSubmit: (() -> Void)?
         
         init(text: Binding<String>, onSubmit: (() -> Void)? = nil) {
-            self.text = text
+            self._text = text
             self.onSubmit = onSubmit
         }
         
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            text.wrappedValue = textField.text ?? ""
+            if let currentValue = textField.text as NSString? {
+                let proposedValue = currentValue.replacingCharacters(in: range, with: string)
+                text = proposedValue
+            }
             return true
         }
         

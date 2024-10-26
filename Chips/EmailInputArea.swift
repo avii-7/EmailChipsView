@@ -66,13 +66,11 @@ extension EmailInputArea {
                 .alignmentGuide(.top) { dimension in
                     let result = height
                     return -result
-                    
                 }
             }
             
             EnhancedTextField(placeholder: "", text: $text, onBackspace: {
                 removeLastChipCard()
-                print("Nice")
             }, onSubmit: {
                 appendEnteredEmail()
                 text = ""
@@ -123,9 +121,6 @@ extension EmailInputArea {
             text.isEmpty,
             emails.isEmpty == false {
             emails.removeLast()
-        }
-        else {
-            print(text, emails.isEmpty)
         }
     }
 }
