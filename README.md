@@ -5,8 +5,7 @@ A custom SwiftUI component that replicates the Gmail iOS input field for dynamic
 ## Features
 1. Dynamic chip creation from user input.
 2. Intuitive and responsive layout.
-3. Similar look and feel to Gmail's email input field on iOS.
-4. Delete chips individually or using the backspace key.
+3. Delete chips individually or using the backspace key.
 
 ## Screenshot:
 <img src="https://github.com/user-attachments/assets/65f680b8-0fff-4abb-8d4c-47cf1907b34b" alt="Working Screenshot - 1" width="300">
